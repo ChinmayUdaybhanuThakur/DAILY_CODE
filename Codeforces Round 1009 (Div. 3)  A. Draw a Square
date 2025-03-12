@@ -1,0 +1,84 @@
+Codeforces Round 1009 (Div. 3)
+
+A. Draw a Square
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct point{
+  int x, y;  
+};
+
+struct side{
+  point x, y;  
+};
+
+struct angle{
+    side s1, s2;
+};
+
+int leng(side s){
+    point p1 = s.x, p2 = s.y;
+    return 
+        (p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y);
+}
+
+bool right_angled(angle a){
+    side s1 = a.s1, s2 = a.s2;
+    return ((s1.y.y - s1.x.y)/(s1.y.x - s1.x.x))*
+        ((s2.y.y - s2.x.y)/(s2.y.x - s2.x.x)) == -1;
+}
+
+bool solve(int l, int r, int d, int u){
+        point p1,p2,p3,p4;
+        
+        p1.x = 0, p1.y = u;
+        p2.x = r, p2.y = 0;
+        p3.x = 0, p3.y = -d;
+        p4.x = -l, p4.y = 0;
+        
+        side s1,s2,s3,s4;
+        
+        s1.x = p1, s1.y = p2;
+        s2.x = p2, s2.y = p3;
+        s3.x = p3, s3.y = p4;
+        s4.x = p4, s4.y = p1;
+        
+        int l1 = leng(s1), l2 = leng(s2), l3 = leng(s3), l4 = leng(s4);
+        
+        if(l1 != l2 or l1 != l3 or l1 != l4) return false;
+        
+        angle a1, a2, a3, a4;
+        a1.s1 = s1, a1.s2 = s2;
+        a2.s1 = s2, a2.s2 = s3;
+        a3.s1 = s3, a3.s2 = s4;
+        a4.s1 = s4, a4.s2 = s1;
+        
+        vector<angle> v = {a1,a2,a3,a4};
+        for(angle a : v){
+            if(!right_angled(a)) return false;
+        }
+        
+        side d1,d2;
+        d1.x = p1, d1.y = p3;
+        d2.x = p2, d2.y = p4;
+        if(leng(d1)!=leng(d2)) return false;
+        
+        return true;
+}
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    
+    int t;
+    cin>>t;
+    while(t--){
+        int l, r, d, u;
+        cin>>l>>r>>d>>u;
+        if(solve(l,r,d,u)) cout<<"YES"<<"\n";
+        else cout<<"NO"<<"\n";
+    }
+
+    return 0;
+}
